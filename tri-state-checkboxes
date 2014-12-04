@@ -1,0 +1,64 @@
+<!-- 
+This code converts textfields into tri-state checkboxes (blank, X, and checkmark)
+Insert the code below into your Oscar custom form and modify the body
+and desired textboxes as indicated below.
+Set the height and width of the textboxes you'd like to change to tri-state checkboxes
+to 12px
+-->
+
+<script type="text/javascript" language="javascript">
+//Switches between a checkmark (sqrt symbol), and X, and empty
+//Adds concern/noconcern classes for proper styling (i.e. color, font)
+//Tested on Chrome 38, FF 31&33, IE11, Safari 5.1.7
+function changeStatus(el) {
+	if (el.value === "") {
+		el.value = "\u221A";
+		el.className = "noconcern";
+	} else if (el.value === "\u221A") {
+		el.value = "X"; 
+		el.className = "concern";
+	} else {
+		el.value = "";
+		el.className = "";
+	}
+}
+
+//Sets the appropriate value in the tri-state checkboxes
+//based on class when form is loaded
+//Must be called in the body onload function (see below)
+function setStatusOnLoad() {
+	var inputFields = document.getElementsByTagName("input");
+	for (i in inputFields) {
+		if (inputFields[i].value === "X") {
+			inputFields[i].className="concern";
+		} else if (inputFields[i].value === "\u221A") {
+			inputFields[i].className="noconcern";
+		} else {
+			inputFields[i].className=""
+		}
+	}
+}
+
+</script>
+
+<!-- Styling of text in the tri-state checkbox -->
+<style>
+	.concern, .noconcern {
+		font: bold 8px arial, sans-serif;
+		width:12px;
+		height:12px;
+	}
+
+	.concern {
+		color:red;
+	}
+</style>
+
+<!--
+You'll have to modify the body of the form to include setStatusOnLoad() which sets the values of the tri-state checkboxes.
+<body onload="checkGender();init();setStatusOnLoad();">
+
+Also, set the onclick property of the textboxes you are want to convert to tri-state checkboxes to changeStatus(this)
+<input name="AutoName1" id="AutoName1" type="text" onclick="changeStatus(this)" style="position:absolute; height:13px; width:13px; left: 148px; top: 277px; " class="">
+
+-->
