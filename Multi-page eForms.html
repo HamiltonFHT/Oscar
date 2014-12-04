@@ -1,0 +1,147 @@
+<!--
+This file presents an example of how to create multi-page custom forms in OSCAR 12.1.
+Each page has to be first created separately, then amalgamated.
+There are a few changes to be made to each file. All files will have more or less the same head,
+so you only need to keep the header from one file. However, some pages may have gender
+checkboxes or signature boxes, which will add some scripts to the head, so be sure
+to include those. Note that the position of the signature box is in the <head>, inside the signatureControl
+javascript <script> tag.
+
+Here is a list of changes you need to make when amalgamating:
+- move the opening <form> tag to just after the opening <body> tag (you only need one <form> tag)
+- wrap each page of the form in <div> tags; check below for properties
+- rename the <img> id of each page
+- change the position of all the <img> to 'relative'
+- rename any id's that are repeated from other pages
+- check the head of each individual page to make sure you're not missing any scripts
+- check the 'onload' of the <body> to make sure you're not missing any function calls
+-->
+
+
+<html>
+<head>
+<title>2-page form example</title>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById('PatientGender').value == 'M'){
+	 document.getElementById('Male').checked = true;
+	 }else if (document.getElementById('PatientGender').value == 'F'){
+	 document.getElementById('Female').checked = true;
+	}
+ }
+</script>
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+<!-- The position of the signature box will come from this script -->
+<script type="text/javascript">if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:37, width:226, top:708, left:47});});}</script>
+<script language="javascript">
+function formPrint(){
+			window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+</head>
+
+<!-- If you have want your gender checkboxes to autocheck, you will need the 'onload="checkGender();' in the body tag
+and the corresponding function in the head -->
+<body onload="checkGender();">
+
+<!-- you only need one form tag, I chose to move it to just after the opening body tag -->
+<form method="post" action="" name="FormName" id="FormName" >
+
+
+<!-- 					Page 1					 -->
+<!-- Below this is the div tag that each page must be contained in. Make sure it is 'position:relative' -->
+<div id="page1" style="page-break-after:always;position:relative;">
+<!-- Make sure the img tag's position is relative!! -->
+<img id='BGImage1' src="${oscar_image_path}MOH - Health Assessment Long Term Care-page0001.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="page1_1" id="page1_1" type="text" class="noborder" style="position:absolute; left:26px; top:598px; width:395px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_2" id="page1_2" type="text" class="noborder" style="position:absolute; left:444px; top:599px; width:274px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<!-- This is a special case where there are the same pre-populated boxes on multiple pages. When this is the case, 
+it is good practice to change the name and id so that every name and id is unique. I added the page number in this case. -->
+<input name="patient_nameL1" id="patient_nameL1" type="text" class="noborder" style="position:absolute; left:26px; top:86px; width:330px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+</div>
+<!-- 					End of page 1					 -->
+
+
+<!-- 					Page 2					 -->
+<div id="page2" style="page-break-after:always;position:relative;">
+<img id='BGImage2' src="${oscar_image_path}MOH - Health Assessment Long Term Care-page0002.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="page2_5" id="page2_5" type="checkbox" class="noborder" style="position:absolute; left:205px; top:132px; ">
+
+<input name="page2_6" id="page2_6" type="checkbox" class="noborder" style="position:absolute; left:277px; top:132px; ">
+
+<input name="patient_nameL2" id="patient_nameL2" type="text" class="noborder" style="position:absolute; left:26px; top:86px; width:330px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+<input name="Male" id="Male" type="checkbox" class="noborder" style="position:absolute; left: 205px; top: 116px">
+<input name="Female" id="Female" type="checkbox" class="noborder" style="position:absolute; left: 277px; top: 116px">
+
+<!-- This indicates that the signature will show up on this page -->
+<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="" ></input>
+</div>
+<!-- 					End of page 2					 -->
+
+
+<!-- Bottom buttons, only need one of these per form -->
+ <div class="DoNotPrint" style="position: relative; top:0px; left:0px;" id="BottomButtons" >
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> 
+			<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+ 
+ </form>
+
+</body>
+</html>
