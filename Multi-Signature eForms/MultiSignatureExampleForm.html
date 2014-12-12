@@ -1,0 +1,177 @@
+<!-- This file is an example, so there are no background images -->
+
+<html><head>
+<title>Multi Signature Test</title>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+
+
+<!-- js graphics scripts -->
+<script type="text/javascript" src="${oscar_image_path}jsgraphics.js"></script>
+<!-- mousefunction scripts -->
+<script type="text/javascript" src="${oscar_image_path}mouse.js"></script>
+<!-- freehand signature scripts -->
+<script type="text/javascript" src="${oscar_image_path}4SignatureScripts.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/BC_Demo/share/javascript/eforms/printControl.js"></script>
+
+
+<script language="javascript">
+function show(x){
+    document.getElementById(x).style.display = 'block';
+}
+function hide(x){
+    document.getElementById(x).style.display = 'none';
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+			window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<style type="Text/css">
+input.largerCheckbox {
+    -moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */
+    -webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */
+    -o-transform:scale(1.3);           /*Opera browser */
+}
+</style>
+<style type="text/css" media="print">
+input.largerCheckbox {
+    -moz-transform:scale(1.8);         /*scale up image 1.8x - Firefox specific */
+    -webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */
+    -o-transform:scale(1.3);           /*Opera browser */
+}
+</style>
+
+<script type="text/javascript">
+function reorderSignature(){
+	document.getElementById('preview1').style.zIndex = '-90';
+	document.getElementById('preview2').style.zIndex = '-91';
+	document.getElementById('preview3').style.zIndex = '-92';
+}
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var all_sign = $(".sign_cnv");
+	var style = [];
+	var left = [];
+	var top = [];
+	var width = [];
+	var height = [];
+	
+	all_sign.each(function(i){
+		$(this).attr("id","SignCanvas"+(i+1))
+				.mouseover(function(){SetDrawOn(); show('ClearSignature'+(i+1));})
+				.mouseout(function(){SetDrawOff(); hide('ClearSignature'+(i+1));})
+				.mousedown(function(){SetMouseDown();SetStart(this.id);})
+				.mouseup(function(){SetMouseUp();  DrawMarker();})
+				.mousemove(function(){DrawPreview();})
+				.before('<input class="hiddendraw" type="hidden">')
+				.before('<input class="hiddenbutton" type="button">')
+				.before('<div id="preview'+(i+1)+'" style="'+$(this).attr("style")+'; background-color:grey;opacity:0.5;filter:alpha(opacity=50);" class="DoNotPrint"></div>');
+	});
+	
+	all_sign.each(function(i){
+		style[i] = $(this).attr('style');
+		style[i] = style[i].replace(/ /g,"");
+		style[i] = style[i].split(';');
+	});
+	
+	for(i=0; i<style.length; i++) {
+		for(j=0; j<style[i].length; j++) {
+			if(style[i][j].indexOf("left:") != -1) {left[i] = Number(style[i][j].slice(5,-2));}
+			else if(style[i][j].indexOf("top:") != -1) {top[i] = Number(style[i][j].slice(4,-2));}
+			else if(style[i][j].indexOf("width:") != -1) {width[i] = Number(style[i][j].slice(6,-2));}
+			else if(style[i][j].indexOf("height:") != -1) {height[i] = Number(style[i][j].slice(7,-2));}
+		}
+	}
+	
+	var buttons = $(".hiddenbutton");
+	buttons.each(function(i){
+		$(this).attr("id","ClearSignature"+(i+1))
+				.attr("name","ClearSignature"+(i+1))
+				.attr("value","Clear Signature"+(i+1))
+				.attr("style","position:absolute; display:none; z-index:1; top:"+top[i]+"px; left:"+(left[i]+width[i])+"px; height:25px;")
+				.click(function(){Clear('SignCanvas'+(i+1));})
+				.mouseover(function(){show(this.id);})
+				.mouseout(function(){hide(this.id);});
+	});
+	
+	var draw = $(".hiddendraw");
+	draw.each(function(i){
+		$(this).attr("id","DrawData"+(i+1))
+				.attr("name","DrawData"+(i+1));
+	});
+	
+});
+</script>
+
+</head>
+
+<body onload="init(); Init_4sig(); reorderSignature();">
+<form method="post" action="" name="FormName" id="FormName">
+
+
+<div class="sign_cnv" style="position:absolute; left:395px; top:100px; width:191px; height:25px;"></div>
+
+<div class="sign_cnv" style="position:absolute; left:395px; top:200px; width:191px; height:25px;"></div>
+
+<div class="sign_cnv" style="position:absolute; left:395px; top:300px; width:191px; height:25px;"></div>
+
+
+ <div class="DoNotPrint" style="position:absolute; top:900px; left:0px;" id="BottomButtons">
+	 <table><tbody><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> 
+			<input value="Submit" name="SubmitButton" id="SubmitButton" onclick=" releaseDirtyFlag();" type="submit"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			 
+			<input value="Submit &amp; Print" name="PrintSubmitButton" id="PrintSubmitButton" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);" type="button"><input value="Print" name="PrintButton" id="PrintButton" onclick="formPrint();" type="button"> 
+	 </td></tr></tbody></table>
+ </div>
+ 
+</form>
+
+</body></html>

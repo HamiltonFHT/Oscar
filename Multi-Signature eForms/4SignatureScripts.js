@@ -5,15 +5,8 @@
 //     DrawData1, DrawData2,...
 // The divs for each page should have the id "page1", "page2", and so on
 
-// Counts and stores the number of signature boxes in the eForm
+// Various variables to store data for each signature
 var numSig = 0;
-var i = 1;
-while (document.getElementById("preview"+i) !== null) {
-	numSig++;
-	i++;
-}
-
-// Various arrays to store data for each signature
 var pvcnv = [];
 var pv = [];
 var cnv = [];
@@ -30,17 +23,26 @@ var jg = [];
 var DrawData = [];
 var TempData = [];
 
-for (i = 0; i < numSig; i++) {
-	pvcnv[i] = document.getElementById("preview"+(i+1));
-	pv[i] = new jsGraphics(pvcnv[i]);
-	cnv[i] = document.getElementById("SignCanvas"+(i+1));
-	jg[i] = new jsGraphics(cnv[i]);
-	cnvLeft[i] = parseInt(cnv[i].style.left);
-	cnvTop[i] = parseInt(cnv[i].style.top);
-	jg[i].setPrintable(true);
-	DrawData[i] = new Array();
-	TempData[i] = new Array();
+function SetVars(){
+	var i = 1;
+	while (document.getElementById("preview"+i) !== null) {
+		numSig++;
+		i++;
+	}
+
+	for (i = 0; i < numSig; i++) {
+		pvcnv[i] = document.getElementById("preview"+(i+1));
+		pv[i] = new jsGraphics(pvcnv[i]);
+		cnv[i] = document.getElementById("SignCanvas"+(i+1));
+		jg[i] = new jsGraphics(cnv[i]);
+		cnvLeft[i] = parseInt(cnv[i].style.left);
+		cnvTop[i] = parseInt(cnv[i].style.top);
+		jg[i].setPrintable(true);
+		DrawData[i] = new Array();
+		TempData[i] = new Array();
+	}
 }
+
 
 var MouseDown = false;
 
@@ -95,9 +97,9 @@ var Xposition = new Array();
 var Yposition = new Array();
 
 function GetXY(x,y){
-var t = StrokeThickness;
-var l = Xposition.length - 1;	//l = last position
-var h = Math.sqrt(Math.pow((Xposition[l] - x),2)+Math.pow((Yposition[l] - y),2)) //calc hypotenuse
+	var t = StrokeThickness;
+	var l = Xposition.length - 1;	//l = last position
+	var h = Math.sqrt(Math.pow((Xposition[l] - x),2)+Math.pow((Yposition[l] - y),2)); //calc hypotenuse
 	if(Xposition.length<2){
 		Xposition.push(x);
 		Yposition.push(y);
@@ -246,7 +248,7 @@ function Clear(cur_jg){
 	Yposition = new Array();
 }
 
-function ReloadImage(){
-	//DecodeData();
+function Init_4sig() {
+	SetVars();
 	RecallImage();
 }
