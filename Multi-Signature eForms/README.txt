@@ -23,6 +23,15 @@ Make sure the following goes in the head of the form:
 <script type="text/javascript" src="${oscar_image_path}jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="/BC_Demo/share/javascript/eforms/printControl.js"></script>
 
+<script language="javascript">
+function show(x){
+    document.getElementById(x).style.display = 'block';
+}
+function hide(x){
+    document.getElementById(x).style.display = 'none';
+}
+</script>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	var all_sign = $(".sign_cnv");
