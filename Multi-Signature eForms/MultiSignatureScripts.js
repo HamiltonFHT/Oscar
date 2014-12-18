@@ -248,7 +248,7 @@ function Clear(cur_jg){
 	Yposition = new Array();
 }
 
-function Init_4sig() {
+function Init_Sig() {
 	SetVars();
 	RecallImage();
 }

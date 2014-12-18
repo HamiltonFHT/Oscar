@@ -18,7 +18,7 @@ Make sure the following goes in the head of the form:
 <!-- mousefunction scripts -->
 <script type="text/javascript" src="${oscar_image_path}mouse.js"></script>
 <!-- freehand signature scripts -->
-<script type="text/javascript" src="${oscar_image_path}4SignatureScripts.js"></script>
+<script type="text/javascript" src="${oscar_image_path}MultiSignatureScripts.js"></script>
 
 <script type="text/javascript" src="${oscar_image_path}jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="/BC_Demo/share/javascript/eforms/printControl.js"></script>
@@ -100,8 +100,8 @@ Make sure these match the id's of the <img>'s.
 **In the example file, there are no BGImages
 
 
-In the <body> tag, make sure to include these for onload: "init(); Init_4sig(); reorderSignature();"
-i.e. <body onload="init(); Init_4sig(); reorderSignature();">
+In the <body> tag, make sure to include these for onload: "init(); Init_Sig(); reorderSignature();"
+i.e. <body onload="init(); Init_Sig(); reorderSignature();">
 
 Find the placeholders for your signature boxes that you created. Replace it with the following
 and make sure to copy over the height, left, top, and width.
