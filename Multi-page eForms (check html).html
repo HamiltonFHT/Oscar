@@ -95,6 +95,7 @@ and the corresponding function in the head -->
 
 <!-- 					Page 1					 -->
 <!-- Below this is the div tag that each page must be contained in. Make sure it is 'position:relative' -->
+<!-- Include page-break-after:always on all pages except the last one -->
 <div id="page1" style="page-break-after:always;position:relative;">
 <!-- Make sure the img tag's position is relative!! -->
 <img id='BGImage1' src="${oscar_image_path}MOH - Health Assessment Long Term Care-page0001.png" style="position: relative; left: 0px; top: 0px; width:750px">
@@ -111,7 +112,8 @@ it is good practice to change the name and id so that every name and id is uniqu
 
 
 <!-- 					Page 2					 -->
-<div id="page2" style="page-break-after:always;position:relative;">
+<!-- Include page-break-after:always on all pages except the last one -->
+<div id="page2" style="position:relative;">
 <!-- Make sure the img tag's position is relative!! -->
 <img id='BGImage2' src="${oscar_image_path}MOH - Health Assessment Long Term Care-page0002.png" style="position: relative; left: 0px; top: 0px; width:750px">
 
