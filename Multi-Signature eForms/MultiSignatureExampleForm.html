@@ -29,7 +29,7 @@
 <!-- mousefunction scripts -->
 <script type="text/javascript" src="${oscar_image_path}mouse.js"></script>
 <!-- freehand signature scripts -->
-<script type="text/javascript" src="${oscar_image_path}4SignatureScripts.js"></script>
+<script type="text/javascript" src="${oscar_image_path}MultiSignatureScripts.js"></script>
 
 <script type="text/javascript" src="${oscar_image_path}jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="/BC_Demo/share/javascript/eforms/printControl.js"></script>
@@ -87,39 +87,30 @@ input.largerCheckbox {
 
 <script type="text/javascript">
 function reorderSignature(){
-	document.getElementById('preview1').style.zIndex = '-90';
-	document.getElementById('preview2').style.zIndex = '-91';
-	document.getElementById('preview3').style.zIndex = '-92';
+	**REORDER BGIMAGE
+	$("img").each(function(i){
+		$(this).attr("style","");
+	});
 }
 </script>
 
 <script type="text/javascript">
 $(document).ready(function(){
-	var all_sign = $(".sign_cnv");
 	var style = [];
 	var left = [];
 	var top = [];
 	var width = [];
 	var height = [];
 	
-	all_sign.each(function(i){
-		$(this).attr("id","SignCanvas"+(i+1))
-				.mouseover(function(){SetDrawOn(); show('ClearSignature'+(i+1));})
-				.mouseout(function(){SetDrawOff(); hide('ClearSignature'+(i+1));})
-				.mousedown(function(){SetMouseDown();SetStart(this.id);})
-				.mouseup(function(){SetMouseUp();  DrawMarker();})
-				.mousemove(function(){DrawPreview();})
-				.before('<input class="hiddendraw" type="hidden">')
-				.before('<input class="hiddenbutton" type="button">')
-				.before('<div id="preview'+(i+1)+'" style="'+$(this).attr("style")+'; background-color:grey;opacity:0.5;filter:alpha(opacity=50);" class="DoNotPrint"></div>');
-	});
-	
-	all_sign.each(function(i){
+	var draw = $(".hiddendraw");
+	draw.each(function(i){
+		$(this).attr("id","DrawData"+(i+1))
+				.after('<div class="sign_cnv"></div>');
 		style[i] = $(this).attr('style');
 		style[i] = style[i].replace(/ /g,"");
 		style[i] = style[i].split(';');
 	});
-	
+
 	for(i=0; i<style.length; i++) {
 		for(j=0; j<style[i].length; j++) {
 			if(style[i][j].indexOf("left:") != -1) {left[i] = Number(style[i][j].slice(5,-2));}
@@ -128,6 +119,20 @@ $(document).ready(function(){
 			else if(style[i][j].indexOf("height:") != -1) {height[i] = Number(style[i][j].slice(7,-2));}
 		}
 	}
+
+	var all_sign = $(".sign_cnv");
+	
+	all_sign.each(function(i){
+		$(this).attr("id","SignCanvas"+(i+1))
+				.attr("style","position:absolute; left:"+left[i]+"px; top:"+top[i]+"px; width:"+width[i]+"px; height:"+height[i]+"px;")
+				.mouseover(function(){SetDrawOn(); show('ClearSignature'+(i+1));})
+				.mouseout(function(){SetDrawOff(); hide('ClearSignature'+(i+1));})
+				.mousedown(function(){SetMouseDown();SetStart(this.id);})
+				.mouseup(function(){SetMouseUp();  DrawMarker();})
+				.mousemove(function(){DrawPreview();})
+				.before('<input class="hiddenbutton" type="button">')
+				.before('<div id="preview'+(i+1)+'" style="'+$(this).attr("style")+'; background-color:grey;opacity:0.5;filter:alpha(opacity=50);z-index:-'+(90+i)+';" class="DoNotPrint"></div>');
+	});
 	
 	var buttons = $(".hiddenbutton");
 	buttons.each(function(i){
@@ -140,27 +145,21 @@ $(document).ready(function(){
 				.mouseout(function(){hide(this.id);});
 	});
 	
-	var draw = $(".hiddendraw");
-	draw.each(function(i){
-		$(this).attr("id","DrawData"+(i+1))
-				.attr("name","DrawData"+(i+1));
-	});
 	
 });
 </script>
 
+
 </head>
 
-<body onload="init(); Init_4sig(); reorderSignature();">
+<body onload="init(); Init_Sig(); reorderSignature();">
 <form method="post" action="" name="FormName" id="FormName">
 
+<input class="hiddendraw" type="hidden" name="DrawData1" style="position:absolute; left:395px; top:100px; width:191px; height:25px;">
 
-<div class="sign_cnv" style="position:absolute; left:395px; top:100px; width:191px; height:25px;"></div>
+<input class="hiddendraw" type="hidden" name="DrawData2"style="position:absolute; left:395px; top:200px; width:191px; height:25px;">
 
-<div class="sign_cnv" style="position:absolute; left:395px; top:200px; width:191px; height:25px;"></div>
-
-<div class="sign_cnv" style="position:absolute; left:395px; top:300px; width:191px; height:25px;"></div>
-
+<input class="hiddendraw" type="hidden" name="DrawData3" style="position:absolute; left:395px; top:300px; width:191px; height:25px;">
 
  <div class="DoNotPrint" style="position:absolute; top:900px; left:0px;" id="BottomButtons">
 	 <table><tbody><tr><td>
